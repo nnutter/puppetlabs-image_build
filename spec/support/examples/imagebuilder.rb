@@ -33,7 +33,7 @@ shared_examples 'an image builder' do
         expect(context).to include(:puppet_path, :gem_path, :r10k_path)
       end
       it 'the OS codename in an environment variable' do
-        expect(context[:environment]).to include(codename: 'jessie')
+        expect(context[:env_map]).to include(codename: 'jessie')
       end
       it 'should expand the entrypoint to an array' do
         expect(context).to include(entrypoint: [])
@@ -80,7 +80,7 @@ shared_examples 'an image builder' do
       expect(context).to include(env: ['KEY=value'])
     end
     it 'should add the env to the environment used by the image' do
-      expect(context[:environment]).to include('KEY' => 'value')
+      expect(context[:env_map]).to include('KEY' => 'value')
     end
   end
 
@@ -470,7 +470,7 @@ entrypoint:
         expect(context).to include(:puppet_path, :gem_path, :r10k_path)
       end
       it 'the facter and puppet version in an environment variable' do
-        expect(context[:environment]).to include(:facter_version, :puppet_version)
+        expect(context[:env_map]).to include(:facter_version, :puppet_version)
       end
     end
   end
@@ -607,7 +607,7 @@ invalid
           }
         end
         it "the codename should be #{codename}" do
-          expect(context[:environment]).to include(codename: codename)
+          expect(context[:env_map]).to include(codename: codename)
         end
       end
     end

@@ -18,8 +18,8 @@ acbuild --debug set-name <%= image_name %>
 
 acbuild --debug environment add FACTER_hostname <%= hostname %>.<%= DateTime.now.rfc3339.gsub(/[^0-9a-z]/i, '') %>.rktbuilder
 
-<% if environment %>
-  <% environment.each do |name, value| %>
+<% if env_map %>
+  <% env_map.each do |name, value| %>
 export <%= name.upcase %>="<%= value %>"
   <% end %>
 <% end %>
