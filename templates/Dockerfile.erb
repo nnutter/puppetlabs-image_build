@@ -125,7 +125,18 @@ RUN \
 <% if master_is_ip -%>
     echo <%= master_host %> puppet >> /etc/hosts && \
 <% end -%>
-    FACTER_hostname=<%= hostname %>.<%= DateTime.now.rfc3339.gsub(/[^0-9a-z]/i, '') %>.dockerbuilder <%= puppet_path %> agent --server <% if master_is_ip %>puppet<% else %><%= master_host %><% end %><% if master_port %> --masterport <%= master_port %><% end %> --verbose <% if puppet_debug %>--debug <% end %>--onetime --no-daemonize <% if show_diff %>--show_diff <% end %>--summarize && \
+    FACTER_hostname=<%= hostname %>.<%= DateTime.now.rfc3339.gsub(/[^0-9a-z]/i, '') %>.dockerbuilder <%= puppet_path %> agent \
+        --server <% if master_is_ip %>puppet<% else %><%= master_host %><% end %> \
+<% if master_port -%>
+        --masterport <%= master_port %> \
+<% end -%>
+<% if puppet_debug -%>
+        --debug \
+<% end -%>
+<% if show_diff -%>
+        --show_diff \
+<% end -%>
+        --verbose --onetime --no-daemonize --summarize && \
 <% if autosign_token -%>
     rm /etc/puppetlabs/puppet/csr_attributes.yaml && \
 <% end -%>
@@ -143,7 +154,18 @@ RUN yum update -y && \
 <% if master_is_ip -%>
     echo <%= master_host %> puppet >> /etc/hosts && \
 <% end -%>
-    FACTER_hostname=<%= hostname %>.<%= DateTime.now.rfc3339.gsub(/[^0-9a-z]/i, '') %>.dockerbuilder <%= puppet_path %> agent --server <% if master_is_ip %>puppet<% else %><%= master_host %><% end %><% if master_port %> --masterport <%= master_port %><% end %> --verbose <% if puppet_debug %>--debug <% end %>--onetime --no-daemonize <% if show_diff %>--show_diff <% end %>--summarize && \
+    FACTER_hostname=<%= hostname %>.<%= DateTime.now.rfc3339.gsub(/[^0-9a-z]/i, '') %>.dockerbuilder <%= puppet_path %> agent \
+        --server <% if master_is_ip %>puppet<% else %><%= master_host %><% end %> \
+<% if master_port -%>
+        --masterport <%= master_port %> \
+<% end -%>
+<% if puppet_debug -%>
+        --debug \
+<% end -%>
+<% if show_diff -%>
+        --show_diff \
+<% end -%>
+        --verbose --onetime --no-daemonize --summarize && \
 <% if autosign_token -%>
     rm /etc/puppetlabs/puppet/csr_attributes.yaml && \
 <% end -%>
@@ -156,7 +178,18 @@ RUN apk update && \
 <% if master_is_ip -%>
     echo <%= master_host %> puppet >> /etc/hosts && \
 <% end -%>
-    FACTER_hostname=<%= hostname %>.<%= DateTime.now.rfc3339.gsub(/[^0-9a-z]/i, '') %>.dockerbuilder <%= puppet_path %> agent --server <% if master_is_ip %>puppet<% else %><%= master_host %><% end %><% if master_port %> --masterport <%= master_port %><% end %> --verbose <% if puppet_debug %>--debug <% end %>--onetime --no-daemonize <% if show_diff %>--show_diff <% end %>--summarize && \
+    FACTER_hostname=<%= hostname %>.<%= DateTime.now.rfc3339.gsub(/[^0-9a-z]/i, '') %>.dockerbuilder <%= puppet_path %> agent \
+        --server <% if master_is_ip %>puppet<% else %><%= master_host %><% end %> \
+<% if master_port -%>
+        --masterport <%= master_port %> \
+<% end -%>
+<% if puppet_debug -%>
+        --debug \
+<% end -%>
+<% if show_diff -%>
+        --show_diff \
+<% end -%>
+        --verbose --onetime --no-daemonize --summarize && \
 <% if autosign_token -%>
     rm /etc/puppetlabs/puppet/csr_attributes.yaml && \
 <% end -%>
@@ -170,7 +203,18 @@ RUN \
     echo 'Acquire::HTTPS::Proxy "false";' >> /etc/apt/apt.conf.d/01proxy && \
 <% end -%>
     apt-get update && \
-    FACTER_hostname=<%= hostname %> <%= puppet_path %> apply <%= manifest %> --detailed-exitcodes --verbose <% if puppet_debug %>--debug <% end %><% if show_diff %>--show_diff <% end %>--summarize <% if use_hiera %>--hiera_config=/hiera.yaml<% end %> --app_management ; rc=$?; if [ $rc -ne 0 ] && [ $rc -ne 2 ]; then exit 1; fi && \
+    FACTER_hostname=<%= hostname %> <%= puppet_path %> apply <%= manifest %> \
+<% if puppet_debug -%>
+        --debug \
+<% end -%>
+<% if show_diff -%>
+        --show_diff \
+<% end -%>
+<% if use_hiera -%>
+        --hiera_config=/hiera.yaml \
+<% end -%>
+        --detailed-exitcodes --verbose --summarize --app_management; \
+        rc=$?; if [ $rc -ne 0 ] && [ $rc -ne 2 ]; then exit 1; fi && \
     apt-get autoremove -y && \
     apt-get clean && \
 <% if apt_proxy -%>
@@ -179,11 +223,31 @@ RUN \
     rm -rf /var/lib/apt/lists/*
     <% elsif os == 'centos' %>
 RUN yum update -y && \
-    FACTER_hostname=<%= hostname %> <%= puppet_path %> apply <%= manifest %> --verbose <% if puppet_debug %>--debug <% end %><% if show_diff %>--show_diff <% end %>--summarize <% if use_hiera %>--hiera_config=/hiera.yaml<% end %> --app_management && \
+    FACTER_hostname=<%= hostname %> <%= puppet_path %> apply <%= manifest %> \
+<% if puppet_debug -%>
+        --debug \
+<% end -%>
+<% if show_diff -%>
+        --show_diff \
+<% end -%>
+<% if use_hiera -%>
+        --hiera_config=/hiera.yaml \
+<% end -%>
+        --verbose --summarize --app_management && \
     yum clean all
     <% elsif os == 'alpine' %>
 RUN apk update && \
-    FACTER_hostname=<%= hostname %> <%= puppet_path %> apply <%= manifest %> --verbose <% if puppet_debug %>--debug <% end %><% if show_diff %>--show_diff <% end %>--summarize <% if use_hiera %>--hiera_config=/hiera.yaml<% end %> --app_management && \
+    FACTER_hostname=<%= hostname %> <%= puppet_path %> apply <%= manifest %> \
+<% if puppet_debug -%>
+        --debug \
+<% end -%>
+<% if show_diff -%>
+        --show_diff \
+<% end -%>
+<% if use_hiera -%>
+        --hiera_config=/hiera.yaml \
+<% end -%>
+        --verbose --summarize --app_management && \
     rm -rf /var/cache/apk/*
     <% end %>
   <% end %>
