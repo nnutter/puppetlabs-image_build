@@ -110,6 +110,10 @@ module PuppetX
         summary 'A Puppet Master to use for building images'
       end
 
+      option '--puppet-environment STRING' do
+        summary 'The Puppet environment to run in.'
+      end
+
       option '--label-schema' do
         summary 'Add label-schema compatible labels'
         default_to { false }

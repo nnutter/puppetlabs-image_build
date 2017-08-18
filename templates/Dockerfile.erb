@@ -152,6 +152,9 @@ RUN \
 <% if show_diff -%>
         --show_diff \
 <% end -%>
+<% if puppet_environment -%>
+        --environment=<%= puppet_environment %> \
+<% end -%>
         --verbose --onetime --no-daemonize --summarize && \
 <% if autosign_token -%>
     rm /etc/puppetlabs/puppet/csr_attributes.yaml && \
@@ -181,6 +184,9 @@ RUN yum update -y && \
 <% if show_diff -%>
         --show_diff \
 <% end -%>
+<% if puppet_environment -%>
+        --environment=<%= puppet_environment %> \
+<% end -%>
         --verbose --onetime --no-daemonize --summarize && \
 <% if autosign_token -%>
     rm /etc/puppetlabs/puppet/csr_attributes.yaml && \
@@ -204,6 +210,9 @@ RUN apk update && \
 <% end -%>
 <% if show_diff -%>
         --show_diff \
+<% end -%>
+<% if puppet_environment -%>
+        --environment=<%= puppet_environment %> \
 <% end -%>
         --verbose --onetime --no-daemonize --summarize && \
 <% if autosign_token -%>
@@ -229,6 +238,9 @@ RUN \
 <% if use_hiera -%>
         --hiera_config=/hiera.yaml \
 <% end -%>
+<% if puppet_environment -%>
+        --environment=<%= puppet_environment %> \
+<% end -%>
         --detailed-exitcodes --verbose --summarize --app_management; \
         rc=$?; if [ $rc -ne 0 ] && [ $rc -ne 2 ]; then exit 1; fi && \
     apt-get autoremove -y && \
@@ -249,6 +261,9 @@ RUN yum update -y && \
 <% if use_hiera -%>
         --hiera_config=/hiera.yaml \
 <% end -%>
+<% if puppet_environment -%>
+        --environment=<%= puppet_environment %> \
+<% end -%>
         --verbose --summarize --app_management && \
     yum clean all
     <%- elsif os == 'alpine' -%>
@@ -262,6 +277,9 @@ RUN apk update && \
 <% end -%>
 <% if use_hiera -%>
         --hiera_config=/hiera.yaml \
+<% end -%>
+<% if puppet_environment -%>
+        --environment=<%= puppet_environment %> \
 <% end -%>
         --verbose --summarize --app_management && \
     rm -rf /var/cache/apk/*
